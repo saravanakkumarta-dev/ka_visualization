@@ -1,1 +1,0 @@
-import{j as t,m as i}from"./index-QulzyJXI.js";function n(){return t.jsx(i.div,{initial:{width:0,opacity:0},whileInView:{width:"120px",opacity:1},viewport:{once:!0,amount:.6},transition:{duration:.8,ease:"easeOut"},style:{height:"1px",background:"linear-gradient(to right, transparent, #C9A227, transparent)",margin:"40px auto"}})}export{n as G};
