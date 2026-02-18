@@ -1,4 +1,10 @@
-import { Box, Typography, IconButton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,7 +26,10 @@ export default function FeaturedProjectsSlider() {
   const [paused, setPaused] = useState(false);
   const [delay, setDelay] = useState(baseDelay);
 
-  const visibleCount = 5;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const visibleCount = isMobile ? 3 : 5;
 
   // Determine current group
   const groupIndex = Math.floor(current / visibleCount);

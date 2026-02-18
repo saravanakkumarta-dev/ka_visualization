@@ -1,4 +1,4 @@
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, useTheme, useMediaQuery } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -14,7 +14,11 @@ export default function LightboxOverlay({
 }) {
   const baseDelay = 4000;
   const manualDelay = 8000;
-  const visibleCount = 5;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const visibleCount = isMobile ? 3 : 5;
+
   const overlayRef = useRef(null);
   const [direction, setDirection] = useState(1);
   const [delay, setDelay] = useState(baseDelay);
