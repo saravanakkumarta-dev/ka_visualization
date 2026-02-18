@@ -3,7 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function LightboxOverlay({
   open,
@@ -15,7 +15,7 @@ export default function LightboxOverlay({
   const baseDelay = 4000;
   const manualDelay = 8000;
   const visibleCount = 5;
-
+  const overlayRef = useRef(null);
   const [direction, setDirection] = useState(1);
   const [delay, setDelay] = useState(baseDelay);
 
@@ -37,13 +37,41 @@ export default function LightboxOverlay({
     const handleKey = (e) => {
       if (!open) return;
 
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+      }
       if (e.key === "ArrowRight") handleNext();
       if (e.key === "ArrowLeft") handlePrev();
     };
 
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
+  }, [open]);
+
+  //Full screen useEffect
+  useEffect(() => {
+    if (!overlayRef.current) return;
+
+    if (open) {
+      const enterFullscreen = async () => {
+        try {
+          if (!document.fullscreenElement) {
+            await overlayRef.current.requestFullscreen();
+          }
+        } catch (err) {
+          console.log("Fullscreen not supported", err);
+        }
+      };
+
+      enterFullscreen();
+    } else {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
   }, [open]);
 
   const handleNext = () => {
@@ -89,6 +117,7 @@ export default function LightboxOverlay({
     <AnimatePresence>
       {open && (
         <Box
+          ref={overlayRef}
           component={motion.div}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

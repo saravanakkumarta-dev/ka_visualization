@@ -161,14 +161,14 @@ export default function Works() {
 
             <Grid container spacing={4}>
               {section.images.map((img, i) => (
-                <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
+                <Grid key={i} size={{ xs: 12, sm: 12, md: 6 }}>
                   <Box
                     sx={{
                       position: "relative",
                       width: "100%",
-                      paddingTop: "75%", // 4:3 ratio (change if needed)
+                      aspectRatio: "16 / 10",
                       overflow: "hidden",
-                      borderRadius: "8px",
+                      borderRadius: "10px",
                       border: "1px solid rgba(201,162,39,0.25)",
                       cursor: "pointer",
                     }}
@@ -186,8 +186,8 @@ export default function Works() {
                       component={motion.img}
                       src={`${section.path}${img}.webp`}
                       loading="lazy"
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ duration: 0.4 }}
+                      whileHover={{ scale: 1.04 }}
+                      transition={{ duration: 0.5 }}
                       sx={{
                         position: "absolute",
                         top: 0,
