@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import LightboxOverlay from "./LightboxOverlay";
 
-const images = Array.from({ length: 7 }, (_, i) =>
-  `/fp_slideAnimation/fp_sl${i + 1}.webp`
+const images = Array.from(
+  { length: 7 },
+  (_, i) => `/fp_slideAnimation/fp_sl${i + 1}.webp`,
 );
 
 export default function FeaturedProjectsSlider() {
@@ -37,9 +38,7 @@ export default function FeaturedProjectsSlider() {
 
     const interval = setInterval(() => {
       setDirection(1);
-      setCurrent((prev) =>
-        prev === images.length - 1 ? 0 : prev + 1
-      );
+      setCurrent((prev) => (prev === images.length - 1 ? 0 : prev + 1));
       setDelay(baseDelay);
     }, delay);
 
@@ -65,7 +64,14 @@ export default function FeaturedProjectsSlider() {
   };
 
   return (
-    <Box sx={{ mt: 16, mb: 20 }}>
+    <Box
+      id="featured-projects"
+      sx={{
+        mt: 16,
+        mb: 20,
+        scrollMarginTop: "120px", // 👈 THIS replaces manual offset
+      }}
+    >
       <Typography
         variant="h4"
         sx={{ textAlign: "center", letterSpacing: "4px", mb: 8 }}

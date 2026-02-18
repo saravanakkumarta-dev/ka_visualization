@@ -4,6 +4,16 @@ import { Helmet } from "react-helmet-async";
 import { Link as RouterLink } from "react-router-dom";
 
 export default function Hero() {
+  const handleScrollToFeatured = () => {
+    const element = document.getElementById("featured-projects");
+    if (!element) return;
+
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   return (
     <Container
       maxWidth="lg"
@@ -35,7 +45,7 @@ export default function Hero() {
             variant="h2"
             sx={{
               fontWeight: 500,
-              letterSpacing: "6px",
+              letterSpacing: { xs: "3px", md: "6px" },
               mb: 2,
             }}
           >
@@ -67,23 +77,53 @@ export default function Hero() {
             visualization crafted with precision, realism and artistic depth.
           </Typography>
 
-          <Button
-            component={RouterLink}
-            to="/works"
-            variant="outlined"
+          {/* Buttons */}
+          <Box
             sx={{
-              borderColor: "#C9A227",
-              color: "#C9A227",
-              padding: "10px 32px",
-              letterSpacing: "3px",
-              "&:hover": {
-                borderColor: "#C9A227",
-                backgroundColor: "rgba(201,162,39,0.08)",
-              },
+              display: "flex",
+              justifyContent: "center",
+              gap: 3,
+              flexWrap: "wrap",
             }}
           >
-            VIEW WORKS
-          </Button>
+            {/* View Works */}
+            <Button
+              component={RouterLink}
+              to="/works"
+              variant="outlined"
+              sx={{
+                borderColor: "#C9A227",
+                color: "#C9A227",
+                padding: "10px 32px",
+                letterSpacing: "3px",
+                "&:hover": {
+                  borderColor: "#C9A227",
+                  backgroundColor: "rgba(201,162,39,0.08)",
+                },
+              }}
+            >
+              VIEW WORKS
+            </Button>
+
+            {/* Featured Projects Scroll */}
+            <Button
+              onClick={handleScrollToFeatured}
+              variant="outlined"
+              sx={{
+                borderColor: "rgba(255,255,255,0.3)",
+                color: "rgba(255,255,255,0.8)",
+                padding: "10px 32px",
+                letterSpacing: "3px",
+                "&:hover": {
+                  borderColor: "#C9A227",
+                  color: "#C9A227",
+                  backgroundColor: "rgba(201,162,39,0.08)",
+                },
+              }}
+            >
+              FEATURED PROJECTS
+            </Button>
+          </Box>
         </motion.div>
       </Box>
     </Container>
