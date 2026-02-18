@@ -1,17 +1,35 @@
 import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import {
+  Scene,
+  PerspectiveCamera,
+  WebGLRenderer,
+  LineBasicMaterial,
+  GridHelper,
+  Group,
+  EdgesGeometry,
+  BoxGeometry,
+  LineSegments,
+  CylinderGeometry,
+  MeshBasicMaterial,
+  Mesh,
+} from "three";
 
 export default function ConstructionScene() {
   const mountRef = useRef(null);
 
   useEffect(() => {
-    const scene = new THREE.Scene();
+    if (!mountRef.current) return;
 
-    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    // Scene
+    const scene = new Scene();
+
+    // Camera
+    const camera = new PerspectiveCamera(75, 1, 0.1, 1000);
     camera.position.set(0, 3, 8);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new THREE.WebGLRenderer({
+    // Renderer
+    const renderer = new WebGLRenderer({
       alpha: true,
       antialias: true,
     });
@@ -19,38 +37,38 @@ export default function ConstructionScene() {
     const size = 340;
     renderer.setSize(size, size);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
 
-    if (!mountRef.current) return;
     mountRef.current.appendChild(renderer.domElement);
 
-    // GOLD MATERIAL
-    const lineMaterial = new THREE.LineBasicMaterial({
+    // GOLD LINE MATERIAL
+    const lineMaterial = new LineBasicMaterial({
       color: 0xc9a227,
       transparent: true,
       opacity: 0,
     });
 
     // Blueprint Grid
-    const grid = new THREE.GridHelper(10, 20, 0xc9a227, 0x444444);
+    const grid = new GridHelper(10, 20, 0xc9a227, 0x444444);
     grid.material.opacity = 0;
     grid.material.transparent = true;
     scene.add(grid);
 
     // Building Group
-    const building = new THREE.Group();
+    const building = new Group();
     scene.add(building);
 
     const levels = 3;
     const levelHeight = 1.2;
-
     const structures = [];
 
+    // Slabs
     for (let i = 0; i < levels; i++) {
-      const geometry = new THREE.EdgesGeometry(
-        new THREE.BoxGeometry(4, 0.3, 3)
+      const geometry = new EdgesGeometry(
+        new BoxGeometry(4, 0.3, 3)
       );
 
-      const slab = new THREE.LineSegments(
+      const slab = new LineSegments(
         geometry,
         lineMaterial.clone()
       );
@@ -60,9 +78,10 @@ export default function ConstructionScene() {
       structures.push(slab);
     }
 
-    // Vertical columns
-    const columnGeometry = new THREE.CylinderGeometry(0.05, 0.05, 3.5, 8);
-    const columnMaterial = new THREE.MeshBasicMaterial({
+    // Columns
+    const columnGeometry = new CylinderGeometry(0.05, 0.05, 3.5, 8);
+
+    const columnMaterial = new MeshBasicMaterial({
       color: 0xc9a227,
       transparent: true,
       opacity: 0,
@@ -76,7 +95,10 @@ export default function ConstructionScene() {
     ];
 
     const columns = columnPositions.map((pos) => {
-      const col = new THREE.Mesh(columnGeometry, columnMaterial.clone());
+      const col = new Mesh(
+        columnGeometry,
+        columnMaterial.clone()
+      );
       col.position.set(...pos);
       col.scale.y = 0;
       building.add(col);
@@ -88,7 +110,6 @@ export default function ConstructionScene() {
 
     const animate = () => {
       animationId = requestAnimationFrame(animate);
-
       progress += 0.01;
 
       // Fade in grid
@@ -114,7 +135,7 @@ export default function ConstructionScene() {
         });
       }
 
-      // After complete → subtle motion
+      // Subtle floating motion after completion
       if (progress > 2) {
         building.rotation.y += 0.002;
         building.position.y = Math.sin(progress * 0.5) * 0.1;
@@ -125,14 +146,27 @@ export default function ConstructionScene() {
 
     animate();
 
+    // Cleanup
     return () => {
       cancelAnimationFrame(animationId);
+
+      scene.traverse((object) => {
+        if (object.geometry) object.geometry.dispose();
+
+        if (object.material) {
+          if (Array.isArray(object.material)) {
+            object.material.forEach((m) => m.dispose());
+          } else {
+            object.material.dispose();
+          }
+        }
+      });
+
+      renderer.dispose();
 
       if (mountRef.current && renderer.domElement) {
         mountRef.current.removeChild(renderer.domElement);
       }
-
-      renderer.dispose();
     };
   }, []);
 

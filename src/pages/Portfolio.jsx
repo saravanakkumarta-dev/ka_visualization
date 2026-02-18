@@ -1,8 +1,10 @@
-import { Container, Typography, Box } from "@mui/material";
 import { Helmet } from "react-helmet-async";
-import { motion } from "framer-motion";
-import ConstructionScene from "../components/ConstructionScene";
+import { lazy, Suspense } from "react";
 import GoldDivider from "../components/GoldDivider";
+
+const ConstructionScene = lazy(() =>
+  import("../components/ConstructionScene")
+);
 
 export default function Portfolio() {
   return (
@@ -15,49 +17,23 @@ export default function Portfolio() {
         />
       </Helmet>
 
-      <Container
-        maxWidth="lg"
-        sx={{
-          minHeight: "100vh",
-          pt: 16,
-          textAlign: "center",
-          position: "relative",
-          zIndex: 2,
-        }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <Typography
-            variant="h3"
-            sx={{
-              letterSpacing: "6px",
-              fontWeight: 500,
-              mb: 2,
-            }}
-          >
-            PORTFOLIO
-          </Typography>
+      <div className="portfolio-container">
+        <div className="fade-up">
+          <h1 className="portfolio-title">PORTFOLIO</h1>
 
           <GoldDivider />
 
-          <Typography
-            sx={{
-              fontSize: "1.1rem",
-              color: "rgba(255,255,255,0.75)",
-              mb: 6,
-            }}
-          >
-            Currently under development.  
+          <p className="portfolio-text">
+            Currently under development.
             A curated collection of premium architectural visualizations
             will be showcased here soon.
-          </Typography>
+          </p>
 
-          <ConstructionScene />
-        </motion.div>
-      </Container>
+          <Suspense fallback={null}>
+            <ConstructionScene />
+          </Suspense>
+        </div>
+      </div>
     </>
   );
 }

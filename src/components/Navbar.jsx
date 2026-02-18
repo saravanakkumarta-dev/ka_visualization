@@ -17,6 +17,7 @@ import { useTheme, useMediaQuery } from "@mui/material";
 import { NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
+import { base } from "../baseUrl";
 
 const menuItems = [
   { label: "Home", path: "/" },
@@ -170,7 +171,7 @@ export default function Navbar() {
           {/* Logo */}
           <motion.img
             layoutId="ka-logo"
-            src="/logo/ka-logo-transparent.webp"
+            src={`${base}logo/ka-logo-transparent.webp`}
             style={{
               height: "50px",
               objectFit: "contain",

@@ -39,17 +39,19 @@ export default function Footer() {
                 xs: "1fr",
                 md: "1fr auto 1fr",
               },
+              textAlign: { xs: "center", md: "left" },
               alignItems: "center",
-              gap: 4,
+              gap: { xs: 4, md: 2 },
             }}
           >
             {/* LEFT — WhatsApp + Mail (Single Line) */}
             <Box
               sx={{
-                justifySelf: { md: "start" },
                 display: "flex",
-                gap: 3,
-                flexWrap: "wrap",
+                flexDirection: { xs: "column", sm: "row" },
+                justifyContent: { xs: "center", md: "flex-start" },
+                alignItems: "center",
+                gap: 2,
               }}
             >
               <Typography
@@ -120,7 +122,6 @@ export default function Footer() {
             {/* RIGHT — Brand + Location */}
             <Box
               sx={{
-                justifySelf: { md: "end" },
                 textAlign: { xs: "center", md: "right" },
               }}
             >

@@ -1,13 +1,14 @@
 import { Box, Typography, Button, Container } from "@mui/material";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
+import { Link as RouterLink } from "react-router-dom";
 
 export default function Hero() {
   return (
     <Container
       maxWidth="lg"
       sx={{
-        minHeight: "100vh",
+        minHeight: "90vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -67,6 +68,8 @@ export default function Hero() {
           </Typography>
 
           <Button
+            component={RouterLink}
+            to="/works"
             variant="outlined"
             sx={{
               borderColor: "#C9A227",

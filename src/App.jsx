@@ -2,17 +2,19 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import PageLoader from "./components/PageLoader";
-import StarBackground from "./components/StarBackground";
 import IntroLoader from "./components/IntroLoader";
-import Navbar from "./components/Navbar";
 import { lazy, Suspense } from "react";
-import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import { Box } from "@mui/material";
 
-const Hero = lazy(() => import("./components/Hero"));
+const StarBackground = lazy(() => import("./components/StarBackground"));
+const Navbar = lazy(() => import("./components/Navbar"));
+const Footer = lazy(() => import("./components/Footer"));
+const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
 const Portfolio = lazy(() => import("./pages/Portfolio"));
 const Works = lazy(() => import("./pages/Works"));
+const ScrollToTopButton = lazy(() => import("./components/ScrollToTopButton"));
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -25,7 +27,7 @@ function AnimatedRoutes() {
             path="/"
             element={
               <PageWrapper>
-                <Hero />
+                <Home />
               </PageWrapper>
             }
           />
@@ -79,8 +81,9 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <StarBackground />
-
+      <Suspense fallback={<PageLoader />}>
+        <StarBackground />
+      </Suspense>
       <AnimatePresence mode="wait">
         {!introFinished && (
           <IntroLoader onFinish={() => setIntroFinished(true)} />
@@ -89,11 +92,23 @@ function App() {
 
       {introFinished && (
         <div style={{ position: "relative", zIndex: 2 }}>
-          <Navbar />
-          <div style={{ paddingTop: "80px" }}>
+          <Suspense fallback={<PageLoader />}>
+            <Navbar />
+          </Suspense>
+          <Box
+            sx={{
+              pt: "80px",
+              px: { xs: 2, sm: 4, md: 6 },
+            }}
+          >
             <AnimatedRoutes />
-          </div>
-          <Footer />
+          </Box>
+          <Suspense fallback={null}>
+            <ScrollToTopButton />
+          </Suspense>
+          <Suspense fallback={<PageLoader />}>
+            <Footer />
+          </Suspense>
         </div>
       )}
     </BrowserRouter>

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { base } from "../baseUrl";
 
 export default function IntroLoader({ onFinish }) {
   const handleVideoEnd = () => {
@@ -13,7 +14,7 @@ export default function IntroLoader({ onFinish }) {
       style={styles.container}
     >
       <video
-        src="/video/intro.webm"
+        src={`${base}video/intro.webm`}
         autoPlay
         muted
         playsInline
@@ -34,8 +35,11 @@ const styles = {
   },
   video: {
     position: "absolute",
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    maxWidth: "95%",
+    maxHeight: "95%",
+    objectFit: "contain",
   },
 };

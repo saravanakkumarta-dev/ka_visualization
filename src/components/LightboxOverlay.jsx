@@ -3,7 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function LightboxOverlay({
   open,
@@ -12,27 +12,84 @@ export default function LightboxOverlay({
   setCurrentIndex,
   onClose,
 }) {
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
+  const baseDelay = 4000;
+  const manualDelay = 8000;
+  const visibleCount = 5;
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
+  const [direction, setDirection] = useState(1);
+  const [delay, setDelay] = useState(baseDelay);
 
+  // Auto slide when open
+  useEffect(() => {
+    if (!open) return;
+
+    const interval = setInterval(() => {
+      setDirection(1);
+      setCurrentIndex((prev) =>
+        prev === images.length - 1 ? 0 : prev + 1
+      );
+      setDelay(baseDelay);
+    }, delay);
+
+    return () => clearInterval(interval);
+  }, [open, delay, images.length, setCurrentIndex]);
+
+  // Keyboard navigation
   useEffect(() => {
     const handleKey = (e) => {
+      if (!open) return;
+
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowRight") handleNext();
       if (e.key === "ArrowLeft") handlePrev();
     };
 
-    if (open) window.addEventListener("keydown", handleKey);
-
-    return () => {
-      window.removeEventListener("keydown", handleKey);
-    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
   }, [open]);
+
+  const handleNext = () => {
+    setDirection(1);
+    setCurrentIndex((prev) =>
+      prev === images.length - 1 ? 0 : prev + 1
+    );
+    setDelay(manualDelay);
+  };
+
+  const handlePrev = () => {
+    setDirection(-1);
+    setCurrentIndex((prev) =>
+      prev === 0 ? images.length - 1 : prev - 1
+    );
+    setDelay(manualDelay);
+  };
+
+  // Thumbnail group logic
+  const groupIndex = Math.floor(currentIndex / visibleCount);
+  const start = groupIndex * visibleCount;
+  const end = start + visibleCount;
+
+  const visibleImages = images.slice(start, end);
+  const hasLeft = start > 0;
+  const hasRight = end < images.length;
+
+  const goToNextGroup = () => {
+    const newStart = end;
+    if (newStart >= images.length) return;
+
+    setDirection(1);
+    setCurrentIndex(newStart);
+    setDelay(manualDelay);
+  };
+
+  const goToPrevGroup = () => {
+    const newStart = start - visibleCount;
+    if (newStart < 0) return;
+
+    setDirection(-1);
+    setCurrentIndex(newStart);
+    setDelay(manualDelay);
+  };
 
   return (
     <AnimatePresence>
@@ -42,7 +99,7 @@ export default function LightboxOverlay({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={onClose} // click outside closes
+          onClick={onClose}
           sx={{
             position: "fixed",
             inset: 0,
@@ -54,33 +111,50 @@ export default function LightboxOverlay({
             justifyContent: "center",
           }}
         >
-          {/* Content Wrapper (NOT full screen) */}
           <Box
             onClick={(e) => e.stopPropagation()}
             sx={{
               position: "relative",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              width: "90vw",
+              maxWidth: "1200px",
             }}
           >
             {/* Main Image */}
             <Box
-              component={motion.img}
-              key={images[currentIndex]}
-              src={images[currentIndex]}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
               sx={{
-                maxWidth: "75vw",
-                maxHeight: "85vh",
-                objectFit: "contain",
-                borderRadius: "8px",
+                position: "relative",
+                aspectRatio: "16 / 9",
+                overflow: "hidden",
               }}
-            />
+            >
+              <AnimatePresence
+                initial={false}
+                custom={direction}
+                mode="wait"
+              >
+                <Box
+                  key={images[currentIndex]}
+                  component={motion.img}
+                  src={images[currentIndex]}
+                  custom={direction}
+                  initial={{ x: direction > 0 ? 400 : -400, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: direction > 0 ? -400 : 400, opacity: 0 }}
+                  transition={{
+                    duration: 0.7,
+                    ease: [0.25, 0.8, 0.25, 1],
+                  }}
+                  sx={{
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                />
+              </AnimatePresence>
+            </Box>
 
-            {/* Close Button */}
+            {/* Close */}
             <IconButton
               onClick={onClose}
               sx={{
@@ -98,8 +172,10 @@ export default function LightboxOverlay({
               onClick={handlePrev}
               sx={{
                 position: "absolute",
+                top: "50%",
                 left: -60,
                 color: "#C9A227",
+                transform: "translateY(-50%)",
               }}
             >
               <ArrowBackIosNewIcon />
@@ -110,46 +186,76 @@ export default function LightboxOverlay({
               onClick={handleNext}
               sx={{
                 position: "absolute",
+                top: "50%",
                 right: -60,
                 color: "#C9A227",
+                transform: "translateY(-50%)",
               }}
             >
               <ArrowForwardIosIcon />
             </IconButton>
 
-            {/* Thumbnails */}
+            {/* Thumbnail Pagination */}
             <Box
               sx={{
-                position: "absolute",
-                right: -120,
-                top: "50%",
-                transform: "translateY(-50%)",
+                mt: 4,
                 display: "flex",
-                flexDirection: "column",
-                gap: 1,
-                maxHeight: "70vh",
-                overflowY: "auto",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 2,
+                flexWrap: "nowrap",
               }}
             >
-              {images.map((img, i) => (
-                <Box
-                  key={i}
-                  component="img"
-                  src={img}
-                  onClick={() => setCurrentIndex(i)}
-                  sx={{
-                    width: 70,
-                    height: 70,
-                    objectFit: "cover",
-                    border:
-                      i === currentIndex
-                        ? "2px solid #C9A227"
-                        : "1px solid rgba(255,255,255,0.2)",
-                    cursor: "pointer",
-                    borderRadius: "4px",
-                  }}
-                />
-              ))}
+              {hasLeft && (
+                <IconButton
+                  onClick={goToPrevGroup}
+                  sx={{ color: "#C9A227" }}
+                >
+                  <ArrowBackIosNewIcon />
+                </IconButton>
+              )}
+
+              {visibleImages.map((img, index) => {
+                const realIndex = start + index;
+
+                return (
+                  <Box
+                    key={realIndex}
+                    component="img"
+                    src={img}
+                    onClick={() => {
+                      setDirection(
+                        realIndex > currentIndex ? 1 : -1
+                      );
+                      setCurrentIndex(realIndex);
+                      setDelay(manualDelay);
+                    }}
+                    sx={{
+                      width: 90,
+                      height: 70,
+                      objectFit: "cover",
+                      border:
+                        realIndex === currentIndex
+                          ? "2px solid #C9A227"
+                          : "1px solid rgba(255,255,255,0.2)",
+                      cursor: "pointer",
+                      borderRadius: "6px",
+                      opacity:
+                        realIndex === currentIndex ? 1 : 0.7,
+                      transition: "all 0.3s ease",
+                    }}
+                  />
+                );
+              })}
+
+              {hasRight && (
+                <IconButton
+                  onClick={goToNextGroup}
+                  sx={{ color: "#C9A227" }}
+                >
+                  <ArrowForwardIosIcon />
+                </IconButton>
+              )}
             </Box>
           </Box>
         </Box>

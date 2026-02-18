@@ -3,20 +3,32 @@ import Grid from "@mui/material/Grid";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import GoldDivider from "../components/GoldDivider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LightboxOverlay from "../components/LightboxOverlay";
+import LuxuryVideoGallery from "../components/LuxuryVideoGallery";
 
 const sections = [
   {
     id: "exterior",
     title: "Exterior",
-    images: ["ext1", "ext2", "ext3", "ext4", "ext5"],
+    images: ["ext1", "ext2", "ext3", "ext4", "ext5", "ext6", "ext7", "ext8"],
     path: "exterior/",
   },
   {
     id: "interior",
     title: "Interior",
-    images: ["int1", "int2", "int3", "int4", "int5", "int6", "int7", "int8"],
+    images: [
+      "int1",
+      "int2",
+      "int3",
+      "int4",
+      "int5",
+      "int6",
+      "int7",
+      "int8",
+      "int9",
+      "int10",
+    ],
     path: "interior/",
   },
   {
@@ -27,11 +39,36 @@ const sections = [
   },
 ];
 
+const panoramaVideos = ["https://www.youtube.com/embed/a4Kz0-k8y7E"];
+
+const walkthroughVideos = [
+  "https://www.youtube.com/embed/O3AoYsqt2mM",
+  "https://www.youtube.com/embed/yWLRJB4TGrA?si=we10W8Qqxny3tFnI",
+  "https://www.youtube.com/embed/4YhSWgTF4L0?si=2a_TpaYoXivHpzfH",
+];
+
+const worksSections = [
+  { label: "Exterior", id: "exterior" },
+  { label: "Interior", id: "interior" },
+  { label: "Commercial", id: "commercial" },
+  { label: "360° Panorama", id: "panorama" },
+  { label: "Walkthrough", id: "walkthrough" },
+];
+
 export default function Works() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImages, setCurrentImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const handleScrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (!element) return;
 
+    const yOffset = -100; // adjust based on navbar height
+    const y =
+      element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
   return (
     <>
       <Helmet>
@@ -63,7 +100,52 @@ export default function Works() {
         </Typography>
 
         <GoldDivider />
+        <Box
+          sx={{
+            mt: 4,
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: 3,
+          }}
+        >
+          {worksSections.map((section) => (
+            <Typography
+              key={section.id}
+              onClick={() => handleScrollToSection(section.id)}
+              sx={{
+                cursor: "pointer",
+                fontSize: "13px",
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.8)",
+                position: "relative",
+                transition: "0.3s ease",
 
+                "&:hover": {
+                  color: "#C9A227",
+                },
+
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  bottom: -4,
+                  left: 0,
+                  width: "0%",
+                  height: "1px",
+                  background: "#C9A227",
+                  transition: "0.3s ease",
+                },
+
+                "&:hover::after": {
+                  width: "100%",
+                },
+              }}
+            >
+              {section.label}
+            </Typography>
+          ))}
+        </Box>
         {sections.map((section) => (
           <Box key={section.id} id={section.id} sx={{ mt: 12 }}>
             <Typography
@@ -81,11 +163,15 @@ export default function Works() {
               {section.images.map((img, i) => (
                 <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
                   <Box
-                    component={motion.img}
-                    src={`${section.path}${img}.webp`}
-                    loading="lazy"
-                    whileHover={{ scale: 1.03 }}
-                    transition={{ duration: 0.4 }}
+                    sx={{
+                      position: "relative",
+                      width: "100%",
+                      paddingTop: "75%", // 4:3 ratio (change if needed)
+                      overflow: "hidden",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(201,162,39,0.25)",
+                      cursor: "pointer",
+                    }}
                     onClick={() => {
                       setCurrentImages(
                         section.images.map(
@@ -95,13 +181,23 @@ export default function Works() {
                       setCurrentIndex(i);
                       setLightboxOpen(true);
                     }}
-                    sx={{
-                      width: "100%",
-                      borderRadius: "8px",
-                      border: "1px solid rgba(201,162,39,0.25)",
-                      cursor: "pointer",
-                    }}
-                  />
+                  >
+                    <Box
+                      component={motion.img}
+                      src={`${section.path}${img}.webp`}
+                      loading="lazy"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.4 }}
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Box>
                 </Grid>
               ))}
             </Grid>
@@ -115,31 +211,7 @@ export default function Works() {
           <Typography variant="h4" sx={{ mb: 6, letterSpacing: "3px" }}>
             360° Panorama
           </Typography>
-
-          <Box
-            sx={{
-              position: "relative",
-              paddingTop: "56.25%",
-              border: "1px solid rgba(201,162,39,0.25)",
-              borderRadius: "8px",
-              overflow: "hidden",
-            }}
-          >
-            <iframe
-              src="https://www.youtube.com/embed/a4Kz0-k8y7E"
-              title="360 Panorama"
-              allowFullScreen
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                border: "none",
-              }}
-            />
-          </Box>
-
+          <LuxuryVideoGallery videos={panoramaVideos} />
           <GoldDivider />
         </Box>
 
@@ -148,31 +220,9 @@ export default function Works() {
           <Typography variant="h4" sx={{ mb: 6, letterSpacing: "3px" }}>
             Walkthrough
           </Typography>
-
-          <Box
-            sx={{
-              position: "relative",
-              paddingTop: "56.25%",
-              border: "1px solid rgba(201,162,39,0.25)",
-              borderRadius: "8px",
-              overflow: "hidden",
-            }}
-          >
-            <iframe
-              src="https://www.youtube.com/embed/O3AoYsqt2mM"
-              title="Walkthrough"
-              allowFullScreen
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                border: "none",
-              }}
-            />
-          </Box>
+          <LuxuryVideoGallery videos={walkthroughVideos} />
         </Box>
+
         <LightboxOverlay
           open={lightboxOpen}
           images={currentImages}

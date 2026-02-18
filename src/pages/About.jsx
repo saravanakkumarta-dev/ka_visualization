@@ -1,8 +1,9 @@
-import { Container, Typography, Box, Divider, Grid } from "@mui/material";
+import { Container, Typography, Box, Grid } from "@mui/material";
 import { Helmet } from "react-helmet-async";
 import { useScroll, useTransform, motion } from "framer-motion";
 import { useRef } from "react";
 import GoldDivider from "../components/GoldDivider";
+import { base } from "../baseUrl";
 
 export default function About() {
   const imageRef = useRef(null);
@@ -95,9 +96,7 @@ export default function About() {
           >
             {/* PROFILE IMAGE */}
             <Grid
-              item
-              xs={12}
-              md={5}
+              size={{ xs: 12, md: 5 }}
               sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -105,7 +104,7 @@ export default function About() {
             >
               <motion.div ref={imageRef} style={{ y }}>
                 <motion.img
-                  src="/profile/profile.webp"
+                  src={`${base}profile/profile.webp`}
                   alt="Adhishivan K"
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
