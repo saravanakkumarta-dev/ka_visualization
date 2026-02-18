@@ -25,9 +25,7 @@ export default function LightboxOverlay({
 
     const interval = setInterval(() => {
       setDirection(1);
-      setCurrentIndex((prev) =>
-        prev === images.length - 1 ? 0 : prev + 1
-      );
+      setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
       setDelay(baseDelay);
     }, delay);
 
@@ -50,17 +48,13 @@ export default function LightboxOverlay({
 
   const handleNext = () => {
     setDirection(1);
-    setCurrentIndex((prev) =>
-      prev === images.length - 1 ? 0 : prev + 1
-    );
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
     setDelay(manualDelay);
   };
 
   const handlePrev = () => {
     setDirection(-1);
-    setCurrentIndex((prev) =>
-      prev === 0 ? images.length - 1 : prev - 1
-    );
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
     setDelay(manualDelay);
   };
 
@@ -127,11 +121,7 @@ export default function LightboxOverlay({
                 overflow: "hidden",
               }}
             >
-              <AnimatePresence
-                initial={false}
-                custom={direction}
-                mode="wait"
-              >
+              <AnimatePresence initial={false} custom={direction} mode="wait">
                 <Box
                   key={images[currentIndex]}
                   component={motion.img}
@@ -199,18 +189,19 @@ export default function LightboxOverlay({
             <Box
               sx={{
                 mt: 4,
+                width: "100%",
+                maxWidth: "100%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 2,
-                flexWrap: "nowrap",
+                gap: 1.5,
+                overflowX: "auto",
+                overflowY: "hidden",
+                boxSizing: "border-box",
               }}
             >
               {hasLeft && (
-                <IconButton
-                  onClick={goToPrevGroup}
-                  sx={{ color: "#C9A227" }}
-                >
+                <IconButton onClick={goToPrevGroup} sx={{ color: "#C9A227" }}>
                   <ArrowBackIosNewIcon />
                 </IconButton>
               )}
@@ -224,9 +215,7 @@ export default function LightboxOverlay({
                     component="img"
                     src={img}
                     onClick={() => {
-                      setDirection(
-                        realIndex > currentIndex ? 1 : -1
-                      );
+                      setDirection(realIndex > currentIndex ? 1 : -1);
                       setCurrentIndex(realIndex);
                       setDelay(manualDelay);
                     }}
@@ -240,19 +229,16 @@ export default function LightboxOverlay({
                           : "1px solid rgba(255,255,255,0.2)",
                       cursor: "pointer",
                       borderRadius: "6px",
-                      opacity:
-                        realIndex === currentIndex ? 1 : 0.7,
+                      opacity: realIndex === currentIndex ? 1 : 0.7,
                       transition: "all 0.3s ease",
+                      flexShrink: 0,
                     }}
                   />
                 );
               })}
 
               {hasRight && (
-                <IconButton
-                  onClick={goToNextGroup}
-                  sx={{ color: "#C9A227" }}
-                >
+                <IconButton onClick={goToNextGroup} sx={{ color: "#C9A227" }}>
                   <ArrowForwardIosIcon />
                 </IconButton>
               )}

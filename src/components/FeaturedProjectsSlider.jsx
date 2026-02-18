@@ -121,10 +121,15 @@ export default function FeaturedProjectsSlider() {
       <Box
         sx={{
           mt: 4,
+          width: "100%",
+          maxWidth: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: 2,
+          gap: 1.5,
+          overflowX: "auto",
+          overflowY: "hidden",
+          boxSizing: "border-box",
         }}
       >
         {hasLeft && (
@@ -158,6 +163,7 @@ export default function FeaturedProjectsSlider() {
                 borderRadius: "6px",
                 opacity: realIndex === current ? 1 : 0.7,
                 transition: "all 0.3s ease",
+                flexShrink: 0,
               }}
             />
           );
