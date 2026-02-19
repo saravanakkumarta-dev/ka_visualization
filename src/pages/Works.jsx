@@ -1,9 +1,9 @@
 import { Container, Typography, Box } from "@mui/material";
-import Grid from "@mui/material/Grid";
 import { Helmet } from "react-helmet-async";
+import Masonry from "@mui/lab/Masonry";
 import { motion } from "framer-motion";
 import GoldDivider from "../components/GoldDivider";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LightboxOverlay from "../components/LightboxOverlay";
 import LuxuryVideoGallery from "../components/LuxuryVideoGallery";
 
@@ -18,16 +18,8 @@ const sections = [
     id: "interior",
     title: "Interior",
     images: [
-      "int1",
-      "int2",
-      "int3",
-      "int4",
-      "int5",
-      "int6",
-      "int7",
-      "int8",
-      "int9",
-      "int10",
+      "int1","int2","int3","int4","int5",
+      "int6","int7","int8","int9","int10",
     ],
     path: "interior/",
   },
@@ -59,16 +51,18 @@ export default function Works() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImages, setCurrentImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
   const handleScrollToSection = (id) => {
     const element = document.getElementById(id);
     if (!element) return;
 
-    const yOffset = -100; // adjust based on navbar height
+    const yOffset = -100;
     const y =
       element.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
     window.scrollTo({ top: y, behavior: "smooth" });
   };
+
   return (
     <>
       <Helmet>
@@ -100,6 +94,8 @@ export default function Works() {
         </Typography>
 
         <GoldDivider />
+
+        {/* Section Navigation */}
         <Box
           sx={{
             mt: 4,
@@ -146,6 +142,8 @@ export default function Works() {
             </Typography>
           ))}
         </Box>
+
+        {/* Image Sections */}
         {sections.map((section) => (
           <Box key={section.id} id={section.id} sx={{ mt: 12 }}>
             <Typography
@@ -159,48 +157,54 @@ export default function Works() {
               {section.title}
             </Typography>
 
-            <Grid container spacing={4}>
+            <Masonry
+              columns={{ xs: 1, sm: 2 }}
+              spacing={4}
+              sx={{
+                "& .MuiMasonryItem-root": {
+                  marginBottom: "0 !important",
+                },
+              }}
+            >
               {section.images.map((img, i) => (
-                <Grid key={i} size={{ xs: 12, sm: 12, md: 6 }}>
+                <Box
+                  key={i}
+                  onClick={() => {
+                    setCurrentImages(
+                      section.images.map(
+                        (image) => `${section.path}${image}.webp`
+                      )
+                    );
+                    setCurrentIndex(i);
+                    setLightboxOpen(true);
+                  }}
+                  sx={{
+                    borderRadius: "12px",
+                    border: "1px solid rgba(201,162,39,0.25)",
+                    overflow: "hidden",
+                    cursor: "pointer",
+                    transition: "0.3s ease",
+                    backgroundColor: "#000",
+                    "&:hover": {
+                      border: "1px solid rgba(201,162,39,0.6)",
+                    },
+                  }}
+                >
                   <Box
+                    component={motion.img}
+                    src={`${section.path}${img}.webp`}
+                    loading="lazy"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.5 }}
                     sx={{
-                      position: "relative",
                       width: "100%",
-                      aspectRatio: "16 / 10",
-                      overflow: "hidden",
-                      borderRadius: "10px",
-                      border: "1px solid rgba(201,162,39,0.25)",
-                      cursor: "pointer",
+                      height: "auto",
+                      display: "block",
                     }}
-                    onClick={() => {
-                      setCurrentImages(
-                        section.images.map(
-                          (image) => `${section.path}${image}.webp`,
-                        ),
-                      );
-                      setCurrentIndex(i);
-                      setLightboxOpen(true);
-                    }}
-                  >
-                    <Box
-                      component={motion.img}
-                      src={`${section.path}${img}.webp`}
-                      loading="lazy"
-                      whileHover={{ scale: 1.04 }}
-                      transition={{ duration: 0.5 }}
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  </Box>
-                </Grid>
+                  />
+                </Box>
               ))}
-            </Grid>
+            </Masonry>
 
             <GoldDivider />
           </Box>

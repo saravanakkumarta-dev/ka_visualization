@@ -31,11 +31,10 @@ export default function FeaturedProjectsSlider() {
 
   const visibleCount = isMobile ? 3 : 5;
 
-  // Determine current group
+  // Group logic
   const groupIndex = Math.floor(current / visibleCount);
   const start = groupIndex * visibleCount;
   const end = start + visibleCount;
-
   const visibleImages = images.slice(start, end);
 
   const hasLeft = start > 0;
@@ -78,7 +77,7 @@ export default function FeaturedProjectsSlider() {
       sx={{
         mt: 16,
         mb: 20,
-        scrollMarginTop: "120px", // 👈 THIS replaces manual offset
+        scrollMarginTop: "120px",
       }}
     >
       <Typography
@@ -94,10 +93,13 @@ export default function FeaturedProjectsSlider() {
           position: "relative",
           maxWidth: "1200px",
           margin: "0 auto",
-          aspectRatio: "16 / 9",
-          overflow: "hidden",
           borderRadius: "14px",
           cursor: "pointer",
+          overflow: "hidden",
+          background: "rgba(255,255,255,0.04)",
+          backdropFilter: "blur(18px)",
+          WebkitBackdropFilter: "blur(18px)",
+          border: "1px solid rgba(255,255,255,0.08)",
         }}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
@@ -117,28 +119,25 @@ export default function FeaturedProjectsSlider() {
               setDelay(manualDelay);
             }}
             sx={{
-              position: "absolute",
               width: "100%",
-              height: "100%",
-              objectFit: "cover",
+              height: "auto",
+              display: "block",
+              objectFit: "contain",
+              maxHeight: "75vh",
             }}
           />
         </AnimatePresence>
       </Box>
 
-      {/* Thumbnails with Pagination */}
+      {/* Thumbnails */}
       <Box
         sx={{
           mt: 4,
-          width: "100%",
-          maxWidth: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           gap: 1.5,
           overflowX: "auto",
-          overflowY: "hidden",
-          boxSizing: "border-box",
         }}
       >
         {hasLeft && (
@@ -163,16 +162,19 @@ export default function FeaturedProjectsSlider() {
               sx={{
                 width: 100,
                 height: 70,
-                objectFit: "cover",
+                objectFit: "contain",
                 border:
                   realIndex === current
                     ? "2px solid #C9A227"
                     : "1px solid rgba(255,255,255,0.2)",
+                borderRadius: "8px",
                 cursor: "pointer",
-                borderRadius: "6px",
-                opacity: realIndex === current ? 1 : 0.7,
+                opacity: realIndex === current ? 1 : 0.75,
                 transition: "all 0.3s ease",
                 flexShrink: 0,
+                background: "rgba(255,255,255,0.04)",
+                backdropFilter: "blur(14px)",
+                WebkitBackdropFilter: "blur(14px)",
               }}
             />
           );

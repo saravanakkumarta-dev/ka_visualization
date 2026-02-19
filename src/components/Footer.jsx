@@ -158,6 +158,60 @@ export default function Footer() {
           >
             © {new Date().getFullYear()} KA Visualization. All rights reserved.
           </Typography>
+          {/* Developer Credit */}
+          <Box
+            sx={{
+              mt: 3,
+              textAlign: "center",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: 1.5,
+              fontSize: "12px",
+              letterSpacing: "1.5px",
+              color: "rgba(255,255,255,0.45)",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: "12px",
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+              }}
+            >
+              Designed & Developed by
+            </Typography>
+
+            <Box
+              component="a"
+              href="https://retrocoders.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={devLinkStyle}
+            >
+              RetroCoders.dev
+            </Box>
+
+            <Box
+              sx={{
+                width: "4px",
+                height: "4px",
+                borderRadius: "50%",
+                backgroundColor: "rgba(201,162,39,0.5)",
+              }}
+            />
+
+            <Box
+              component="a"
+              href="https://saravanakkumarta.retrocoders.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={devLinkStyle}
+            >
+              Saravanak Kumar T A
+            </Box>
+          </Box>
         </Container>
       </Box>
     </motion.div>
@@ -182,6 +236,34 @@ const linkStyle = {
 
   "&:hover": {
     color: "#C9A227",
+  },
+};
+
+const devLinkStyle = {
+  color: "#C9A227",
+  textDecoration: "none",
+  fontWeight: 500,
+  transition: "all 0.3s ease",
+  position: "relative",
+
+  "&:hover": {
+    color: "#fff",
+    textShadow: "0 0 8px rgba(201,162,39,0.6)",
+  },
+
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    width: "0%",
+    height: "1px",
+    left: 0,
+    bottom: -2,
+    backgroundColor: "#C9A227",
+    transition: "0.3s ease",
+  },
+
+  "&:hover::after": {
+    width: "100%",
   },
 };
 

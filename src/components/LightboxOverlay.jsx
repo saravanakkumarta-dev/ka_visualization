@@ -16,14 +16,13 @@ export default function LightboxOverlay({
   const manualDelay = 8000;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
   const visibleCount = isMobile ? 3 : 5;
 
   const overlayRef = useRef(null);
   const [direction, setDirection] = useState(1);
   const [delay, setDelay] = useState(baseDelay);
 
-  // Auto slide when open
+  // Auto slide
   useEffect(() => {
     if (!open) return;
 
@@ -55,26 +54,14 @@ export default function LightboxOverlay({
     return () => window.removeEventListener("keydown", handleKey);
   }, [open]);
 
-  //Full screen useEffect
+  // Fullscreen
   useEffect(() => {
     if (!overlayRef.current) return;
 
     if (open) {
-      const enterFullscreen = async () => {
-        try {
-          if (!document.fullscreenElement) {
-            await overlayRef.current.requestFullscreen();
-          }
-        } catch (err) {
-          console.log("Fullscreen not supported", err);
-        }
-      };
-
-      enterFullscreen();
+      overlayRef.current.requestFullscreen?.().catch(() => {});
     } else {
-      if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
-      }
+      document.exitFullscreen?.().catch(() => {});
     }
   }, [open]);
 
@@ -90,11 +77,10 @@ export default function LightboxOverlay({
     setDelay(manualDelay);
   };
 
-  // Thumbnail group logic
+  // Thumbnail grouping
   const groupIndex = Math.floor(currentIndex / visibleCount);
   const start = groupIndex * visibleCount;
   const end = start + visibleCount;
-
   const visibleImages = images.slice(start, end);
   const hasLeft = start > 0;
   const hasRight = end < images.length;
@@ -102,7 +88,6 @@ export default function LightboxOverlay({
   const goToNextGroup = () => {
     const newStart = end;
     if (newStart >= images.length) return;
-
     setDirection(1);
     setCurrentIndex(newStart);
     setDelay(manualDelay);
@@ -111,7 +96,6 @@ export default function LightboxOverlay({
   const goToPrevGroup = () => {
     const newStart = start - visibleCount;
     if (newStart < 0) return;
-
     setDirection(-1);
     setCurrentIndex(newStart);
     setDelay(manualDelay);
@@ -130,28 +114,36 @@ export default function LightboxOverlay({
           sx={{
             position: "fixed",
             inset: 0,
-            background: "rgba(0,0,0,0.92)",
+            background: "rgba(0,0,0,0.95)",
             backdropFilter: "blur(8px)",
             zIndex: 2000,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            overflowY: "auto",
+            padding: 4,
           }}
         >
           <Box
             onClick={(e) => e.stopPropagation()}
             sx={{
               position: "relative",
-              width: "90vw",
+              width: "100%",
               maxWidth: "1200px",
             }}
           >
-            {/* Main Image */}
+            {/* Main Image (Fixed Properly) */}
             <Box
               sx={{
-                position: "relative",
-                aspectRatio: "16 / 9",
-                overflow: "hidden",
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                borderRadius: "16px",
+                background: "rgba(255,255,255,0.04)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                padding: 2,
               }}
             >
               <AnimatePresence initial={false} custom={direction} mode="wait">
@@ -160,18 +152,19 @@ export default function LightboxOverlay({
                   component={motion.img}
                   src={images[currentIndex]}
                   custom={direction}
-                  initial={{ x: direction > 0 ? 400 : -400, opacity: 0 }}
+                  initial={{ x: direction > 0 ? 300 : -300, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: direction > 0 ? -400 : 400, opacity: 0 }}
+                  exit={{ x: direction > 0 ? -300 : 300, opacity: 0 }}
                   transition={{
-                    duration: 0.7,
+                    duration: 0.6,
                     ease: [0.25, 0.8, 0.25, 1],
                   }}
                   sx={{
-                    position: "absolute",
                     width: "100%",
-                    height: "100%",
+                    height: "auto",
+                    maxHeight: "80vh",
                     objectFit: "contain",
+                    display: "block",
                   }}
                 />
               </AnimatePresence>
@@ -182,8 +175,8 @@ export default function LightboxOverlay({
               onClick={onClose}
               sx={{
                 position: "absolute",
-                top: -20,
-                right: -20,
+                top: -40,
+                right: 0,
                 color: "#C9A227",
               }}
             >
@@ -195,7 +188,7 @@ export default function LightboxOverlay({
               onClick={handlePrev}
               sx={{
                 position: "absolute",
-                top: "50%",
+                top: "40%",
                 left: -60,
                 color: "#C9A227",
                 transform: "translateY(-50%)",
@@ -209,7 +202,7 @@ export default function LightboxOverlay({
               onClick={handleNext}
               sx={{
                 position: "absolute",
-                top: "50%",
+                top: "40%",
                 right: -60,
                 color: "#C9A227",
                 transform: "translateY(-50%)",
@@ -218,19 +211,15 @@ export default function LightboxOverlay({
               <ArrowForwardIosIcon />
             </IconButton>
 
-            {/* Thumbnail Pagination */}
+            {/* Thumbnails */}
             <Box
               sx={{
                 mt: 4,
-                width: "100%",
-                maxWidth: "100%",
                 display: "flex",
-                alignItems: "center",
                 justifyContent: "center",
+                alignItems: "center",
                 gap: 1.5,
                 overflowX: "auto",
-                overflowY: "hidden",
-                boxSizing: "border-box",
               }}
             >
               {hasLeft && (
@@ -241,7 +230,6 @@ export default function LightboxOverlay({
 
               {visibleImages.map((img, index) => {
                 const realIndex = start + index;
-
                 return (
                   <Box
                     key={realIndex}
@@ -255,16 +243,19 @@ export default function LightboxOverlay({
                     sx={{
                       width: 90,
                       height: 70,
-                      objectFit: "cover",
+                      objectFit: "contain",
                       border:
                         realIndex === currentIndex
                           ? "2px solid #C9A227"
                           : "1px solid rgba(255,255,255,0.2)",
+                      borderRadius: "8px",
                       cursor: "pointer",
-                      borderRadius: "6px",
-                      opacity: realIndex === currentIndex ? 1 : 0.7,
+                      opacity: realIndex === currentIndex ? 1 : 0.75,
                       transition: "all 0.3s ease",
                       flexShrink: 0,
+                      background: "rgba(255,255,255,0.05)",
+                      backdropFilter: "blur(14px)",
+                      WebkitBackdropFilter: "blur(14px)",
                     }}
                   />
                 );
