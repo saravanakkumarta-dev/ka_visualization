@@ -11,22 +11,41 @@ const sections = [
   {
     id: "exterior",
     title: "Exterior",
-    images: ["ext1", "ext2", "ext3", "ext4", "ext5", "ext6", "ext7", "ext8"],
+    images: [
+      "ext1",
+      "ext2",
+      "ext3",
+      "ext9",
+      "ext4",
+      "ext5",
+      "ext6",
+      "ext7",
+      "ext8",
+    ],
     path: "exterior/",
   },
   {
     id: "interior",
     title: "Interior",
     images: [
-      "int1","int2","int3","int4","int5",
-      "int6","int7","int8","int9","int10",
+      "int1",
+      "int2",
+      "int11",
+      "int3",
+      "int4",
+      "int5",
+      "int6",
+      "int7",
+      "int8",
+      "int9",
+      "int10",
     ],
     path: "interior/",
   },
   {
     id: "commercial",
     title: "Commercial",
-    images: ["com1img", "com2img"],
+    images: ["com1img", "com3img", "com2img"],
     path: "commercial/",
   },
 ];
@@ -172,8 +191,8 @@ export default function Works() {
                   onClick={() => {
                     setCurrentImages(
                       section.images.map(
-                        (image) => `${section.path}${image}.webp`
-                      )
+                        (image) => `${section.path}${image}.webp`,
+                      ),
                     );
                     setCurrentIndex(i);
                     setLightboxOpen(true);
@@ -200,6 +219,7 @@ export default function Works() {
                       width: "100%",
                       height: "auto",
                       display: "block",
+                      maxHeight:"85vh"
                     }}
                   />
                 </Box>

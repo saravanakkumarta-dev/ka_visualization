@@ -119,10 +119,14 @@ export default function Footer() {
               </IconButton>
             </Box>
 
-            {/* RIGHT — Brand + Location */}
+            {/* RIGHT — Brand + Location + Map */}
             <Box
               sx={{
                 textAlign: { xs: "center", md: "right" },
+                display: "flex",
+                flexDirection: "column",
+                alignItems: { xs: "center", md: "flex-end" },
+                gap: 2,
               }}
             >
               <Typography
@@ -136,14 +140,44 @@ export default function Footer() {
               </Typography>
 
               <Typography
+                component="a"
+                href="https://maps.app.goo.gl/auPhMm91svzqrhx98"
+                target="_blank"
+                rel="noopener noreferrer"
                 sx={{
                   fontSize: "14px",
                   color: "rgba(255,255,255,0.7)",
-                  mt: 0.5,
+                  textDecoration: "none",
+                  transition: "0.3s",
+                  "&:hover": { color: "#C9A227" },
                 }}
               >
                 Tirupur, Tamil Nadu, India
               </Typography>
+
+              {/* Mini Map */}
+              <Box
+                sx={{
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  border: "1px solid rgba(201,162,39,0.3)",
+                  boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
+                  transition: "0.4s ease",
+                  "&:hover": {
+                    transform: "scale(1.03)",
+                    borderColor: "#C9A227",
+                  },
+                }}
+              >
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3915.250442475436!2d77.33940419999999!3d11.094703199999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba9070046aa2c31%3A0x69b32810bd0f1a23!2sAdhishivan%20home!5e0!3m2!1sen!2sin!4v1771610705353!5m2!1sen!2sin"
+                  width="400"
+                  height="300"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </Box>
             </Box>
           </Box>
 
@@ -182,7 +216,7 @@ export default function Footer() {
             >
               Designed & Developed by
             </Typography>
-
+            {/* 
             <Box
               component="a"
               href="https://retrocoders.dev"
@@ -192,6 +226,7 @@ export default function Footer() {
             >
               RetroCoders.dev
             </Box>
+            */}
 
             <Box
               sx={{

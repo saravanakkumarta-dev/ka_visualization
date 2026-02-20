@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import PageLoader from "./components/PageLoader";
 import IntroLoader from "./components/IntroLoader";
 import { lazy, Suspense } from "react";
@@ -55,6 +61,8 @@ function AnimatedRoutes() {
               </PageWrapper>
             }
           />
+          {/* Catch-all non-existent route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AnimatePresence>
     </Suspense>

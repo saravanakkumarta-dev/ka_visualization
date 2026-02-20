@@ -25,6 +25,16 @@ export default function Hero() {
         textAlign: "center",
         position: "relative",
         zIndex: 2,
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+          height: "120px",
+          background: "linear-gradient(to bottom, transparent, #000)",
+          pointerEvents: "none",
+        },
       }}
     >
       <Helmet>
@@ -125,6 +135,92 @@ export default function Hero() {
             </Button>
           </Box>
         </motion.div>
+      </Box>
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: { xs: 40, md: 70 },
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          cursor: "pointer",
+          zIndex: 3,
+        }}
+        onClick={handleScrollToFeatured}
+      >
+        {/* Animated Vertical Line */}
+        <motion.div
+          animate={{ y: [0, 14, 0] }}
+          transition={{ repeat: Infinity, duration: 2.6, ease: "easeInOut" }}
+        >
+          <Box
+            sx={{
+              width: "2px",
+              height: { xs: 60, md: 90 },
+              background:
+                "linear-gradient(to bottom, rgba(201,162,39,0.9), rgba(201,162,39,0.15))",
+              borderRadius: "2px",
+            }}
+          />
+        </motion.div>
+
+        {/* Discover Section */}
+        <Box
+          sx={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mt: 3,
+          }}
+        >
+          {/* Soft Golden Halo */}
+          <motion.div
+            animate={{ opacity: [0.4, 0.8, 0.4] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              position: "absolute",
+              width: "220px",
+              height: "70px",
+              borderRadius: "50%",
+              background:
+                "radial-gradient(circle, rgba(201,162,39,0.35) 0%, rgba(201,162,39,0.15) 40%, transparent 75%)",
+              filter: "blur(28px)",
+              pointerEvents: "none",
+            }}
+          />
+
+          {/* Animated Gradient Text */}
+          <motion.div
+            animate={{
+              backgroundPosition: ["0% 50%", "100% 50%"],
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 7,
+              ease: "linear",
+            }}
+            style={{
+              background: "linear-gradient(90deg, #C9A227, #F0D27A, #C9A227)",
+              backgroundSize: "200% auto",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: { xs: "16px", md: "20px" },
+                letterSpacing: "8px",
+                fontWeight: 500,
+                textAlign: "center",
+              }}
+            >
+              DISCOVER
+            </Typography>
+          </motion.div>
+        </Box>
       </Box>
     </Container>
   );
