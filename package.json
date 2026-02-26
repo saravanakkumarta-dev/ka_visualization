@@ -1,7 +1,7 @@
 {
   "name": "ka_visualization",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "postbuild": "node scripts/postbuild.js",
-    "deploy": "npm run build && npm run postbuild && gh-pages -d dist"
+    "deploy": "npm run build && npm run postbuild && gh-pages -d dist -r https://github.com/saravanakkumarta-dev/ka_visualization.git"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
