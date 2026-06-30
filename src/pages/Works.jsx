@@ -29,13 +29,14 @@ const sections = [
     id: "interior",
     title: "Interior",
     images: [
+      "int12",
+      "int13",
+      "int14",
       "int1",
       "int2",
       "int11",
       "int3",
       "int4",
-      "int5",
-      "int6",
       "int7",
       "int8",
       "int9",
@@ -51,7 +52,10 @@ const sections = [
   },
 ];
 
-const panoramaVideos = ["https://www.youtube.com/embed/a4Kz0-k8y7E"];
+// const panoramaVideos = ["https://www.youtube.com/embed/hJMeG6ti7Rg?si=QPkXt-E19SJfJQfK","https://www.youtube.com/embed/a4Kz0-k8y7E"];
+//Commenting out the above line so that we can show the panorama videos in complete master display.
+const panoramaVideos1 = ["https://www.youtube.com/embed/hJMeG6ti7Rg?si=QPkXt-E19SJfJQfK"]
+const panoramaVideos2 = ["https://www.youtube.com/embed/a4Kz0-k8y7E"];
 
 const walkthroughVideos = [
   "https://www.youtube.com/embed/O3AoYsqt2mM",
@@ -236,7 +240,8 @@ export default function Works() {
           <Typography variant="h4" sx={{ mb: 6, letterSpacing: "3px" }}>
             360° Panorama
           </Typography>
-          <LuxuryVideoGallery videos={panoramaVideos} />
+          <LuxuryVideoGallery videos={panoramaVideos1} />
+          <LuxuryVideoGallery videos={panoramaVideos2} />
           <GoldDivider />
         </Box>
 
