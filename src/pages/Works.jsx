@@ -39,8 +39,6 @@ const sections = [
       "int4",
       "int7",
       "int8",
-      "int9",
-      "int10",
     ],
     path: "interior/",
   },
